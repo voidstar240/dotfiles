@@ -29,7 +29,7 @@ function install-config() {
     if [[ ! -d "$outdir" ]]; then
         mkdir -p "$outdir"
     fi
-    ln -sf "$DOTFILES/$1" "$2"
+    ln -sfT "$DOTFILES/$1" "$2"
     echo "$1 -> $2"
 }
 
