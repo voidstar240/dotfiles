@@ -32,3 +32,6 @@ vim.opt.timeout = true           -- allow key presses to timeout
 vim.opt.timeoutlen = 1000        -- pressed keys timeout after 1000 ms
 
 vim.opt.cmdheight = 0            -- hide the command line
+
+vim.opt.list = true
+vim.opt.listchars = { tab = "▸  " } -- use triangle to identify tab characters

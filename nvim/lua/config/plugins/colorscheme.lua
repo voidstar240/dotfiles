@@ -32,6 +32,7 @@ return {
                 NvimTreeGitStaged = { fg = p.neutral_green },
                 NvimTreeIndentMarker = { fg = p.dark2 },
                 MsgArea = { bg = p.dark0 },
+                ExtraWhitespace = { bg = p.bright_red },
             }
         })
         vim.opt.background = "dark"
