@@ -34,5 +34,6 @@ function install-config() {
 }
 
 install-config ".zshrc" "$HOME/.zshrc"
+install-config ".gitconfig" "$HOME/.gitconfig"
 install-config "alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
 install-config "nvim" "$HOME/.config/nvim"
