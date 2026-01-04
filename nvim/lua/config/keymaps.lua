@@ -31,3 +31,24 @@ vim.keymap.set({ "n", "v" }, "L", "$", { desc = "Move cursor to end of line" })
 -- move selection up/down and smart indent it
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection up" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection down" })
+
+-- LSP keymaps
+vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = "[G]o to [D]efinition" })
+vim.keymap.set("n", "gD", function() vim.lsp.buf.declaration() end, { desc = "[G]o to [D]eclaration" })
+vim.keymap.set("n", "gt", function() vim.lsp.buf.type_definition() end, { desc = "[G]o to [T]ype definition" })
+vim.keymap.set("n", "<Leader><Leader>", function() vim.lsp.buf.hover() end, { desc = "View hover documentation" })
+vim.keymap.set("n", "<Leader>d", function() vim.diagnostic.jump({ count =  1 }) end, { desc = "Next [D]iagnostic"})
+vim.keymap.set("n", "<Leader>D", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Previous [D]iagnostic" })
+vim.keymap.set("n", "<Leader>ss", function() vim.lsp.buf.workspace_symbol() end, { desc = "[S]earch [S]ymbol" })
+vim.keymap.set("n", "<Leader>ca", function() vim.lsp.buf.code_action() end, { desc = "[C]ode [A]ctions" })
+vim.keymap.set("n", "<Leader>rr", function() vim.lsp.buf.references() end, { desc = "View [R]eferences" })
+vim.keymap.set("n", "<Leader>rn", function() vim.lsp.buf.rename() end, { desc = "[R]e[N]ame Symbol" })
+vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, { desc = "Signature [H]elp" })
+vim.keymap.set("i", "<C-j>", function()
+    if vim.fn.pumvisible() == 0 then
+        vim.lsp.completion.get()
+    else
+        local key = vim.api.nvim_replace_termcodes("<C-e>", true, false, true)
+        vim.api.nvim_feedkeys(key, "n", false)
+    end
+end, { desc = "Completion Menu" })
