@@ -2,14 +2,16 @@
 
 DOTFILES=$( dirname -- $( readlink -f -- "$0"; ); )
 
-command -v fc-list >/dev/null 2>&1 || {
-    echo >&2 "ERROR: Command fc-list not found";
-    exit 1;
-}
+if ! [ "$1" = "--no-fonts" ]; then
+    command -v fc-list >/dev/null 2>&1 || {
+        echo >&2 "ERROR: Command fc-list not found";
+        exit 1;
+    }
 
-if [[ -z $(fc-list "SauceCodePro Nerd Font") ]]; then
-    echo >&2 "ERROR: SauceCodePro Nerd Font not found"
-    exit 1;
+    if [[ -z $(fc-list "SauceCodePro Nerd Font") ]]; then
+        echo >&2 "ERROR: SauceCodePro Nerd Font not found"
+        exit 1;
+    fi
 fi
 
 function install-config() {
@@ -29,7 +31,7 @@ function install-config() {
     if [[ ! -d "$outdir" ]]; then
         mkdir -p "$outdir"
     fi
-    ln -sfT "$DOTFILES/$1" "$2"
+    ln -sfnT "$DOTFILES/$1" "$2"
     echo "$1 -> $2"
 }
 
