@@ -34,14 +34,23 @@ return {
                 float = {
                     enable = true,
                     quit_on_focus_loss = true,
-                    open_win_config = {
-                        relative = "editor",
-                        border = "rounded",
-                        width = 40,
-                        height = 30,
-                        row = 1,
-                        col = 42,
-                    },
+                    open_win_config = function()
+                        local row = 1
+                        local width = 40
+                        local height = vim.o.lines - row * 2 - 1
+                        local col = vim.o.columns - width - 2
+                        if col > 80 + vim.o.numberwidth + 4 then
+                            col = 80 + vim.o.numberwidth + 4
+                        end
+                        return {
+                            relative = "editor",
+                            border = "rounded",
+                            row = row,
+                            col = col,
+                            height = height - 2,
+                            width = width - 2,
+                        }
+                    end,
                 },
             },
         }
