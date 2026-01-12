@@ -5,13 +5,10 @@
 # BEGIN PLUGIN SETUP
 ZSH_PLUGINS="$HOME/.zsh"
 
-function create-plugin-dir() {
+function init-plugin() {
     if [ ! -d "$ZSH_PLUGINS" ]; then
         mkdir -p "$ZSH_PLUGINS"
     fi
-}
-
-function install-plugin() {
     if [ ! -d "$ZSH_PLUGINS/$1" ]; then
         print -Pn "Installing %B$1%b..."
         if git clone -q "$2" "$ZSH_PLUGINS/$1"; then
@@ -20,16 +17,7 @@ function install-plugin() {
             echo -e "%B%F{red}FAILED%b%f"
         fi
     fi
-}
-
-function source-plugin() {
     source "$ZSH_PLUGINS/$1/$1.plugin.zsh"
-}
-
-function init-plugin() {
-    create-plugin-dir
-    install-plugin $1 $2
-    source-plugin $1
 }
 
 init-plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions.git"
