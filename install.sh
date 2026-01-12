@@ -2,16 +2,18 @@
 
 DOTFILES=$( dirname -- $( readlink -f -- "$0"; ); )
 
-if ! [ "$1" = "--no-fonts" ]; then
-    command -v fc-list >/dev/null 2>&1 || {
-        echo >&2 "ERROR: Command fc-list not found";
-        exit 1;
-    }
-
-    if [[ -z $(fc-list "SauceCodePro Nerd Font") ]]; then
-        echo >&2 "ERROR: SauceCodePro Nerd Font not found"
+if command -v fc-list >/dev/null 2>&1; then
+    if [ -z $(fc-list "SauceCodePro Nerd Font") ]; then
+        echo >&2 "WARN: SauceCodePro Nerd Font not found."
         exit 1;
     fi
+else
+    echo >&2 "WARN: Command fc-list not found. Font checking will not be performed.";
+    exit 1;
+fi
+
+if ! command -v wl-copy >/dev/null 2>&1 && ! command -v xclip >/dev/null 2>&1; then
+    echo >&2 "WARN: wl-clipboard or xclip not installed."
 fi
 
 function install-config() {
