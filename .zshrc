@@ -22,6 +22,7 @@ function init-plugin() {
 
 init-plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions.git"
 init-plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+init-plugin "git-prompt" "https://github.com/woefe/git-prompt.zsh"
 autoload -Uz compinit && compinit
 # END PLUGIN SETUP
 
@@ -46,23 +47,28 @@ bindkey -e
 # Beam Style Cursor
 CURSOR=$'%{\e[6 q%}'
 
-# Shell Prompt
-STD_PROMPT="%B%F{red}[%b%F{yellow}%n%b%f@%b%F{cyan}%m%b%f %~%B%F{red}]%b%f"
-USER_SYM="%b%F{8}%(!.#.$)%b%f"
-function update_prompt() {
-    BRANCH=$(git branch --show-current 2> /dev/null)
-    GIT_PROMPT=""
-    if [ -n "$BRANCH" ]; then
-        DIRTY=""
-        if [ -n "$(git status -s)" ]; then
-            DIRTY="*"
-        fi
-        GIT_PROMPT=" %b%F{blue}(${BRANCH}${DIRTY})%b%f"
-    fi
-    PROMPT="${STD_PROMPT}${GIT_PROMPT}${USER_SYM} ${CURSOR}"
-}
+ZSH_GIT_PROMPT_SHOW_UPSTREAM="no"
+ZSH_GIT_PROMPT_SHOW_TRACKING_COUNTS=0
+ZSH_GIT_PROMPT_SHOW_LOCAL_COUNTS=0
 
-precmd_functions+=(update_prompt)
+ZSH_THEME_GIT_PROMPT_PREFIX=" %b%F{8}❬"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%b%F{8}❭"
+ZSH_THEME_GIT_PROMPT_SEPARATOR=" "
+ZSH_THEME_GIT_PROMPT_DETACHED="%{$fg_bold[red]%}:"
+ZSH_THEME_GIT_PROMPT_BRANCH="%{$fg[blue]%}"
+ZSH_THEME_GIT_PROMPT_BEHIND="↓"
+ZSH_THEME_GIT_PROMPT_AHEAD="↑"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg_bold[red]%}!"
+ZSH_THEME_GIT_PROMPT_STAGED="%{$fg[green]%}●"
+ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg[red]%}✖"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[yellow]%}★"
+ZSH_THEME_GIT_PROMPT_STASHED="%{$fg[blue]%}⚑"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}✔"
+
+PROMPT="%B%F{red}[%b%F{yellow}%n%b%f@%b%F{cyan}%m%b%f %~%B%F{red}]%b%f"
+PROMPT+='$(gitprompt)'
+PROMPT+="%b%F{8}%(!.#.$)%b%f ${CURSOR}"
+RPROMPT=''
 
 alias ls='ls --color=auto --group-directories-first'
 alias ll='ls -lh'
@@ -86,3 +92,4 @@ export LS_COLORS
 if [ -d "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
 fi
+
