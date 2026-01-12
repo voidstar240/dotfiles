@@ -13,6 +13,7 @@ vim.keymap.set({ "n", "v" }, "q", "<Nop>")
 vim.keymap.set({ "n", "v" }, "<C-Q>", "q", { desc = "Start/Stop recording macro" })
 
 -- copy and paste from system clipboard
+-- if this doesn't work install `wl-clipboard`
 vim.keymap.set({ "n", "v" }, "<Leader>y", "\"+y", { desc = "[Y]ank to system clipboard" })
 vim.keymap.set({ "n", "v" }, "<Leader>P", "\"+p", { desc = "[P]aste from system clipboard" })
 
