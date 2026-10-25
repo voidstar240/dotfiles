@@ -70,6 +70,39 @@ PROMPT+='$(gitprompt)'
 PROMPT+="%b%F{8}%(!.#.$)%b%f ${CURSOR}"
 RPROMPT=''
 
+function archive() {
+    echo "Archiving $PWD..."
+    echo "Hashing files..."
+    find $@ -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > sha256sum.txt
+    file_count=$(find $@ -type f | wc -l)
+    if [[ "$file_count" -ne "$(wc -l < sha256sum.txt)" ]]; then
+        echo "ERROR: Not all files included in sha256sum.txt"
+        return 1
+    fi
+    if [[ ! sha_out=$(sha256sum -c sha256sum.txt) ]]; then
+        printf '%s\n' "$sha_out" grep FAILED
+        echo "ERROR: File(s) failed checksum"
+        return 1
+    fi
+    echo "Recording directories..."
+    find $@ -type d -print0 | LC_ALL=C sort -z | tr '\0' '\n' > dirs.txt
+    sed -i '/^$/d' dirs.txt
+    dir_count=$(find $@ -type d | wc -l)
+    if [[ "$dir_count" -ne "$(wc -l < dirs.txt)" ]]; then
+        echo "ERROR: Not all directories included in dirs.txt"
+        return 1
+    fi
+    sha256sum dirs.txt > sha256sum.meta.txt
+    sha256sum sha256sum.txt >> sha256sum.meta.txt
+    echo "Creating archive..."
+    size=$(du -sb $@ | awk '{sum += $1} END {print sum}')
+    tar -cf - $@ dirs.txt sha256sum.txt sha256sum.meta.txt | pv -s "$size" | gzip > archive.tar.gz
+}
+
+function calc() {
+    sed 's/x/\*/g' <<< "$@" | bc -l
+}
+
 alias ls='ls --color=auto --group-directories-first'
 alias ll='ls -lh'
 alias la='ls -A'
